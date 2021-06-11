@@ -37,9 +37,25 @@ while True:
     elif key == 13:
         img = cv2.imread(allFiles[index])
         center_coordinates = (220, 150)
-        radius = 100
-        color = (0, 255, 0)
-        thickness = 2
+        radius = 30
+        color = (0, 255, 0,0.5)
+        thickness = 200
+        image = cv2.circle(img, center_coordinates, radius, color, thickness)
+        cv2.imshow ('screen', image)
+    elif key == 32:
+        img = cv2.imread(allFiles[index])
+        center_coordinates = (220, 150)
+        radius = 30
+        color = (200, 200, 200)
+        thickness = 200
+        image = cv2.circle(img, center_coordinates, radius, color, thickness)
+        cv2.imshow ('screen', image)
+    elif key == 225:
+        img = cv2.imread(allFiles[index])
+        center_coordinates = (220, 150)
+        radius = 30
+        color = (0, 0, 200)
+        thickness = 200
         image = cv2.circle(img, center_coordinates, radius, color, thickness)
         cv2.imshow ('screen', image)
 
