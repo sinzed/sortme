@@ -5,7 +5,7 @@ import os
 import state
 
 def main():
-    allEntities = getAllEntites() 
+    allEntities = state.getAllEntites() 
   
     img = cv2.imread(allEntities[0]["image"])
     img = loadCircle(img, allEntities[0])
@@ -73,6 +73,9 @@ def main():
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
 
+        elif key == 101:
+            state.exportToCsv()
+
         # 255 is what the console returns when there is no key press...
         elif key != 255:
             print(key)
@@ -100,26 +103,6 @@ def loadCircle(img, entity):
         img = cv2.circle(img, center_coordinates, radius, color, thickness)
     return img
 
-def getAllEntites():
-    allFiles = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk('./')] for val in sublist]
-    allImages = [f for f in allFiles if ".jpg" in f]
-    AllEntities = []
-    for image in allImages:
-        textFileName = getFileTextName(image)
-        if(textFileName in allFiles):
-            entity = {
-                'image':image,
-                'text': textFileName
-                }
-            AllEntities.append(entity)
-        else:
-            entity = {
-            'image':image,
-            'text': ""
-            }
-            AllEntities.append(entity)
-
-    return AllEntities
 
 def showCircle(img, color):
     center_coordinates = (220, 150)
