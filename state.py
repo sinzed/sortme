@@ -1,16 +1,14 @@
-def saveState(state, videoFileName):
-    videoFileParts = videoFileName.split(".jpg")
+def saveState(state, entity):
+
+    videoFileParts = entity["image"].split(".jpg")
     txtFileName = videoFileParts[0]+".txt"
     open(txtFileName, "w").write(state)
+    entity["text"]=txtFileName
 
-def getColor(videoFileName):
-    try:
-        videoFileParts = videoFileName.split(".jpg")
-        txtFileName = videoFileParts[0]+".txt"    
-        file = open(txtFileName, "r").read()
-        return  mapColor(file)
-    except:
-        return (256,256,256)
+def getColor(txtFileName):
+    colorText = open(txtFileName, "r").read()
+    print(colorText)
+    return  mapColor(colorText)
 
 def mapColor(colorName):
     if(colorName =="same"):

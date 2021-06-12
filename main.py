@@ -8,15 +8,13 @@ def main():
     allEntities = getAllEntites() 
   
     img = cv2.imread(allEntities[0]["image"])
-
+    img = loadCircle(img, allEntities[0])
+    index = 0
     cv2.namedWindow ('screen', cv2.WINDOW_NORMAL)
     cv2.setWindowProperty ('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
     img = showFileAdress(img, allEntities[0]["image"])
     cv2.imshow ('screen', img)
-    index=0
-    center_coordinates = (220, 150)
-    radius = 30
-    thickness = 200
+   
 
 
     while True:
@@ -30,18 +28,18 @@ def main():
         elif key == 84:
             print ("down")
         elif key == 81:
-            index = index+1
+            if(index<len(allEntities)-1):
+                index = index+1
             img = cv2.imread(allEntities[index]["image"])
-            color = state.getColor(allEntities[index]["image"])
             img = showFileAdress(img, allEntities[index]["image"])
-            img = cv2.circle(img, center_coordinates, radius, color, thickness)
+            img = loadCircle(img, allEntities[index])
             cv2.imshow ('screen', img)
             print ("left")
         elif key == 83:
-            index=index-1
+            if(index>0):
+                index = index-1
             img = cv2.imread(allEntities[index]["image"])
-            color = state.getColor(allEntities[index]["image"])
-            img = cv2.circle(img, center_coordinates, radius, color, thickness)
+            img = loadCircle(img, allEntities[index])
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
             print ("right")
@@ -49,31 +47,30 @@ def main():
         elif key == 13:
             img = cv2.imread(allEntities[index]["image"])
             color = state.mapColor("same")
-            img = cv2.circle(img, center_coordinates, radius, color, thickness)
+            img = showCircle(img, color)
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
-            state.saveState("same",allEntities[index]["image"])
+            state.saveState("same",allEntities[index])
         elif key == 32:
             img = cv2.imread(allEntities[index]["image"])
             color = state.mapColor("dontKnow")
-            img = cv2.circle(img, center_coordinates, radius, color, thickness)
+            img = showCircle(img, color)
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
-            state.saveState("dontKnow",allEntities[index]["image"])
+            state.saveState("dontKnow",allEntities[index])
 
         elif key == 225:
             img = cv2.imread(allEntities[index]["image"])
             color = state.mapColor("not")
-            img = cv2.circle(img, center_coordinates, radius, color, thickness)
+            img = showCircle(img, color)
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
-            state.saveState("not",allEntities[index]["image"])
+            state.saveState("not",allEntities[index])
 
         elif key == 110:
-            entity = getNextNotSeen(allEntities)
-            img = cv2.imread(entity["image"])
-            img = cv2.circle(img, center_coordinates, radius, color, thickness)
-            img = showFileAdress(img, entity["image"])
+            index = getNextNotSeenIndex(allEntities)
+            img = cv2.imread(allEntities[index]["image"])
+            img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
 
         # 255 is what the console returns when there is no key press...
@@ -82,17 +79,26 @@ def main():
     # print(f'You entered {value}')
     # cv2.waitKey (0)
     # cv2.destroyAllWindows ()
-def getNextNotSeen(allEntities):
+def getNextNotSeenIndex(allEntities):
     # print(allEntities)
-    for entity in allEntities:
+    for idx, entity in enumerate(allEntities):
         print(len(entity['text']))
         print(entity['text'], len(entity['text']))
         if len(entity['text']) < 1:
-            return entity
+            return idx
 
 def getFileTextName(imageFileName):
     splitedImageFileName = imageFileName.split(".jpg")
     return splitedImageFileName[0]+".txt"
+
+def loadCircle(img, entity):
+    center_coordinates = (220, 150)
+    radius = 30
+    thickness = 200
+    if len(entity['text']) > 2:
+        color = state.getColor(entity["text"])
+        img = cv2.circle(img, center_coordinates, radius, color, thickness)
+    return img
 
 def getAllEntites():
     allFiles = [val for sublist in [[os.path.join(i[0], j) for j in i[2]] for i in os.walk('./')] for val in sublist]
@@ -114,7 +120,12 @@ def getAllEntites():
             AllEntities.append(entity)
 
     return AllEntities
-            
+
+def showCircle(img, color):
+    center_coordinates = (220, 150)
+    radius = 30
+    thickness = 200
+    return cv2.circle(img, center_coordinates, radius, color, thickness)
 
 def showFileAdress(image, text):
     font                   = cv2.FONT_HERSHEY_SIMPLEX
