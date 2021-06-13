@@ -25,15 +25,15 @@ def main():
             print ("up")
         elif key == 84:
             print ("down")
-        elif key == 83:
+        elif key == 83  or key == 100:
             index = rightPressed(allEntities, index)
-        elif key == 81:
+        elif key == 81 or key == 97:
             index = leftPressed(allEntities, index)
         elif key == 13:
             index = enterPressed(allEntities, index)      
-        elif key == 32:
-            index = spacePressed(allEntities, index)
-        elif key == 225:
+        elif key == 111:
+            index = dontKnowPressed(allEntities, index)
+        elif key == 225 or key == 32:
             index = notSamePressed(allEntities, index)
         elif key == 110:
             index = showNextNotSeen(allEntities)
@@ -43,7 +43,7 @@ def main():
             exportResult(img)
         # 255 is what the console returns when there is no key press...
         elif key != 255:
-            print(key)
+            print(int(key))
 
 def exportResult(img):
     img = state.writeTextToImage(img, "exporting", (400,200))
@@ -81,7 +81,7 @@ def notSamePressed(allEntities, index):
     index = showNextNotSeen(allEntities, index)
     return index
 
-def spacePressed(allEntities, index):
+def dontKnowPressed(allEntities, index):
     img = cv2.imread(allEntities[index]["image"])
     color = state.mapColor("dontKnow")
     img = showCircle(img, color)

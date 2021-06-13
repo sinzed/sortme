@@ -14,10 +14,10 @@ open command line and run
 
 * put the image folder in the folder of project (near main.py)
 
-* press <- Arrow Keys  -> to switch between images
+* press <- Arrow Keys  -> or "a" and "d" to switch between images
 * press "Enter" to mark with green color (group A)
-* press "Left-Shift" to mark with red color (group B)
-* press "Space" to mark with gray color (decide for later)
+* press "Left-Shift" or "Space" to mark with red color (group B)
+* press "o" to mark with gray color (decide for later)
 * press "n" to see the next not seen image
 * press "m" to see the image decided for later
 * press "Escape" to exit
