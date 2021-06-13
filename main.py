@@ -1,5 +1,6 @@
 import cv2
 import state
+import time
 
 def main():
     allEntities = state.getAllEntites() 
@@ -25,67 +26,101 @@ def main():
         elif key == 84:
             print ("down")
         elif key == 83:
-            if(index<len(allEntities)-1):
-                index = index+1
-            img = cv2.imread(allEntities[index]["image"])
-            img = showFileAdress(img, allEntities[index]["image"])
-            img = loadCircle(img, allEntities[index])
-            cv2.imshow ('screen', img)
+            index = rightPressed(allEntities, index)
         elif key == 81:
-            if(index>0):
-                index = index-1
-            img = cv2.imread(allEntities[index]["image"])
-            img = loadCircle(img, allEntities[index])
-            img = showFileAdress(img, allEntities[index]["image"])
-            cv2.imshow ('screen', img)
-
+            index = leftPressed(allEntities, index)
         elif key == 13:
-            img = cv2.imread(allEntities[index]["image"])
-            color = state.mapColor("y")
-            img = showCircle(img, color)
-            img = showFileAdress(img, allEntities[index]["image"])
-            cv2.imshow ('screen', img)
-            state.saveState("y",allEntities[index])      
-
+            index = enterPressed(allEntities, index)      
         elif key == 32:
-            img = cv2.imread(allEntities[index]["image"])
-            color = state.mapColor("dontKnow")
-            img = showCircle(img, color)
-            img = showFileAdress(img, allEntities[index]["image"])
-            cv2.imshow ('screen', img)
-            state.saveState("dontKnow",allEntities[index])
-
+            index = spacePressed(allEntities, index)
         elif key == 225:
-            img = cv2.imread(allEntities[index]["image"])
-            color = state.mapColor("n")
-            img = showCircle(img, color)
-            img = showFileAdress(img, allEntities[index]["image"])
-            cv2.imshow ('screen', img)
-            state.saveState("n",allEntities[index])
-
+            index = notSamePressed(allEntities, index)
         elif key == 110:
-            index = getNextNotSeenIndex(allEntities)
-            img = cv2.imread(allEntities[index]["image"])
-            img = showFileAdress(img, allEntities[index]["image"])
-            cv2.imshow ('screen', img)
-
+            index = showNextNotSeen(allEntities)
         elif key == 109:
-            index = getNextDontKnowIndex(allEntities)
-            img = cv2.imread(allEntities[index]["image"])
-            img = showFileAdress(img, allEntities[index]["image"])
-            img = loadCircle(img, allEntities[index])
-            cv2.imshow ('screen', img)
-
+            img = showNextDontKnow(allEntities)
         elif key == 101:
-            img = state.writeTextToImage(img, "exporting", (400,200))
-            cv2.imshow ('screen', img)
-            state.exportToCsv()
-            img = state.writeTextToImage(img, "finished result.csv", (400,400))
-            cv2.imshow ('screen', img)
-
+            exportResult(img)
         # 255 is what the console returns when there is no key press...
         elif key != 255:
             print(key)
+
+def exportResult(img):
+    img = state.writeTextToImage(img, "exporting", (400,200))
+    cv2.imshow ('screen', img)
+    state.exportToCsv()
+    img = state.writeTextToImage(img, "finished result.csv", (400,400))
+    cv2.imshow ('screen', img)
+
+def showNextDontKnow(allEntities):
+    index = getNextDontKnowIndex(allEntities)
+    img = cv2.imread(allEntities[index]["image"])
+    img = showFileAdress(img, allEntities[index]["image"])
+    img = loadCircle(img, allEntities[index])
+    cv2.imshow ('screen', img)
+    return img
+
+def showNextNotSeen(allEntities, index):
+    nextNotSeenIndex = getNextNotSeenIndex(allEntities)
+    if nextNotSeenIndex is not None:
+        index = nextNotSeenIndex
+        img = cv2.imread(allEntities[index]["image"])
+        img = showFileAdress(img, allEntities[index]["image"])
+        cv2.imshow ('screen', img)
+        index = nextNotSeenIndex
+    return index
+
+def notSamePressed(allEntities, index):
+    img = cv2.imread(allEntities[index]["image"])
+    color = state.mapColor("n")
+    img = showCircle(img, color)
+    img = showFileAdress(img, allEntities[index]["image"])
+    cv2.imshow ('screen', img)
+    state.saveState("n",allEntities[index])
+    cv2.waitKey(300)
+    index = showNextNotSeen(allEntities, index)
+    return index
+
+def spacePressed(allEntities, index):
+    img = cv2.imread(allEntities[index]["image"])
+    color = state.mapColor("dontKnow")
+    img = showCircle(img, color)
+    img = showFileAdress(img, allEntities[index]["image"])
+    cv2.imshow ('screen', img)
+    state.saveState("dontKnow",allEntities[index])
+    cv2.waitKey(300)
+    index = showNextNotSeen(allEntities, index)
+    return index
+
+def enterPressed(allEntities, index):
+    img = cv2.imread(allEntities[index]["image"])
+    color = state.mapColor("y")
+    img = showCircle(img, color)
+    img = showFileAdress(img, allEntities[index]["image"])
+    cv2.imshow ('screen', img)
+    state.saveState("y",allEntities[index])
+    cv2.waitKey(300)
+    index = showNextNotSeen(allEntities, index)
+    return index
+
+def leftPressed(allEntities, index):
+    if(index>0):
+        index = index-1
+    img = cv2.imread(allEntities[index]["image"])
+    img = loadCircle(img, allEntities[index])
+    img = showFileAdress(img, allEntities[index]["image"])
+    cv2.imshow ('screen', img)
+    return index
+
+def rightPressed(allEntities, index):
+    if(index<len(allEntities)-1):
+        index = index+1
+    img = cv2.imread(allEntities[index]["image"])
+    img = showFileAdress(img, allEntities[index]["image"])
+    img = loadCircle(img, allEntities[index])
+    cv2.imshow ('screen', img)
+    return index
+
 def getNextNotSeenIndex(allEntities):
     for idx, entity in enumerate(allEntities):
         if len(entity['text']) < 1:
