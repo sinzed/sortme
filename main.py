@@ -1,7 +1,4 @@
 import cv2
-import numpy as np
-from PIL import Image
-import os
 import state
 
 def main():
@@ -27,22 +24,20 @@ def main():
             print ("up")
         elif key == 84:
             print ("down")
-        elif key == 81:
+        elif key == 83:
             if(index<len(allEntities)-1):
                 index = index+1
             img = cv2.imread(allEntities[index]["image"])
             img = showFileAdress(img, allEntities[index]["image"])
             img = loadCircle(img, allEntities[index])
             cv2.imshow ('screen', img)
-            print ("left")
-        elif key == 83:
+        elif key == 81:
             if(index>0):
                 index = index-1
             img = cv2.imread(allEntities[index]["image"])
             img = loadCircle(img, allEntities[index])
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
-            print ("right")
 
         elif key == 13:
             img = cv2.imread(allEntities[index]["image"])
@@ -73,22 +68,33 @@ def main():
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
 
+        elif key == 109:
+            index = getNextDontKnowIndex(allEntities)
+            img = cv2.imread(allEntities[index]["image"])
+            img = showFileAdress(img, allEntities[index]["image"])
+            img = loadCircle(img, allEntities[index])
+            cv2.imshow ('screen', img)
+
         elif key == 101:
+            img = state.writeTextToImage(img, "exporting", (400,200))
+            cv2.imshow ('screen', img)
             state.exportToCsv()
+            img = state.writeTextToImage(img, "finished result.csv", (400,400))
+            cv2.imshow ('screen', img)
 
         # 255 is what the console returns when there is no key press...
         elif key != 255:
             print(key)
-    # print(f'You entered {value}')
-    # cv2.waitKey (0)
-    # cv2.destroyAllWindows ()
 def getNextNotSeenIndex(allEntities):
-    # print(allEntities)
     for idx, entity in enumerate(allEntities):
-        print(len(entity['text']))
-        print(entity['text'], len(entity['text']))
         if len(entity['text']) < 1:
             return idx
+
+def getNextDontKnowIndex(allEntities):
+    for idx, entity in enumerate(allEntities):
+        if len(entity['text']) > 1 and entity['state']=="dontKnow":
+            return idx
+    # return getNextNotSeenIndex(allEntities)
 
 def getFileTextName(imageFileName):
     splitedImageFileName = imageFileName.split(".jpg")

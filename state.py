@@ -1,13 +1,15 @@
 import os
+import cv2
+
 def saveState(state, entity):
     videoFileParts = entity["image"].split(".jpg")
     txtFileName = videoFileParts[0]+".txt"
     open(txtFileName, "w").write(state)
     entity["text"]=txtFileName
+    entity["state"]=state
 
 def getColor(txtFileName):
     colorText = open(txtFileName, "r").read()
-    print(colorText)
     return  mapColor(colorText)
 
 def mapColor(colorName):
@@ -25,15 +27,18 @@ def getAllEntites():
     for image in allImages:
         textFileName = getFileTextName(image)
         if(textFileName in allFiles):
+            state = open(textFileName, "r").read()
             entity = {
                 'image':image,
-                'text': textFileName
+                'text': textFileName,
+                'state': state
                 }
             AllEntities.append(entity)
         else:
             entity = {
             'image':image,
-            'text': ""
+            'text': "",
+            'state': ""
             }
             AllEntities.append(entity)
 
@@ -53,3 +58,17 @@ def exportToCsv():
 def getFileTextName(imageFileName):
     splitedImageFileName = imageFileName.split(".jpg")
     return splitedImageFileName[0]+".txt"
+
+def writeTextToImage(image, text, position):
+    font                   = cv2.FONT_HERSHEY_SIMPLEX
+    bottomLeftCornerOfText = position
+    fontScale              = 1
+    fontColor              = (0,0,0)
+    lineType               = 2
+    image = cv2.putText(image, text, 
+    bottomLeftCornerOfText, 
+    font, 
+    fontScale,
+    fontColor,
+    lineType)
+    return image
