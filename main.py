@@ -41,11 +41,12 @@ def main():
 
         elif key == 13:
             img = cv2.imread(allEntities[index]["image"])
-            color = state.mapColor("same")
+            color = state.mapColor("y")
             img = showCircle(img, color)
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
-            state.saveState("same",allEntities[index])
+            state.saveState("y",allEntities[index])      
+
         elif key == 32:
             img = cv2.imread(allEntities[index]["image"])
             color = state.mapColor("dontKnow")
@@ -56,11 +57,11 @@ def main():
 
         elif key == 225:
             img = cv2.imread(allEntities[index]["image"])
-            color = state.mapColor("not")
+            color = state.mapColor("n")
             img = showCircle(img, color)
             img = showFileAdress(img, allEntities[index]["image"])
             cv2.imshow ('screen', img)
-            state.saveState("not",allEntities[index])
+            state.saveState("n",allEntities[index])
 
         elif key == 110:
             index = getNextNotSeenIndex(allEntities)

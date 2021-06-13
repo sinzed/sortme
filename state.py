@@ -13,11 +13,11 @@ def getColor(txtFileName):
     return  mapColor(colorText)
 
 def mapColor(colorName):
-    if(colorName =="same"):
+    if(colorName =="y"):
         return  (0, 255, 0)
     elif(colorName == "dontKnow"):
         return (200, 200, 200)
-    elif(colorName == "not"):
+    elif(colorName == "n"):
         return (0, 0, 200)
 
 def getAllEntites():
