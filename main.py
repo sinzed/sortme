@@ -42,7 +42,7 @@ def main():
         elif key == 225 or key == 32 or key == 48:
             index = notSamePressed(allEntities, index)
         elif key == 110:
-            index = showNextNotSeen(allEntities)
+            index = showNextNotSeen(allEntities, index)
         elif key == 109:
             img = showNextDontKnow(allEntities)
         elif key == 101:
@@ -57,6 +57,7 @@ def exportResult(img):
     state.exportToCsv()
     img = state.writeTextToImage(img, "finished result.csv", (400,400))
     cv2.imshow ('screen', img)
+    exit()
 
 def showNextDontKnow(allEntities):
     index = getNextDontKnowIndex(allEntities)
@@ -79,10 +80,10 @@ def showNextNotSeen(allEntities, index):
 def notSamePressed(allEntities, index):
     img = cv2.imread(allEntities[index]["image"])
     color = state.mapColor("n")
-    img = state.drawCircle(img, color)
+    img = state.drawCircle(img, color, 0)
     img = showFileAdress(img, allEntities[index]["image"])
     cv2.imshow ('screen', img)
-    state.saveState("n",allEntities[index])
+    state.saveState("n",allEntities[index], eqNumber=0)
     cv2.waitKey(300)
     index = showNextNotSeen(allEntities, index)
     return index

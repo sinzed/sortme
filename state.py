@@ -105,7 +105,7 @@ def drawCircle(img, color, numberOnCircle=""):
     fontScale              = 3
     fontColor              = (0,0,0)
     lineType               = 2
-    image = cv2.putText(circle, numberOnCircle, bottomLeftCornerOfText,
+    image = cv2.putText(circle, str(numberOnCircle), bottomLeftCornerOfText,
     font, 
     fontScale,
     fontColor,
