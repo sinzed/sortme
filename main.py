@@ -6,7 +6,7 @@ def main():
     allEntities = state.getAllEntites() 
   
     img = cv2.imread(allEntities[0]["image"])
-    img = loadCircle(img, allEntities[0])
+    img = state.loadCircle(img, allEntities[0])
     index = 0
     cv2.namedWindow ('screen', cv2.WINDOW_NORMAL)
     cv2.setWindowProperty ('screen', cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
@@ -31,9 +31,15 @@ def main():
             index = leftPressed(allEntities, index)
         elif key == 13:
             index = enterPressed(allEntities, index)      
+        elif key == 49:
+            index = enterPressed(allEntities, index, 1)      
+        elif key == 50:
+            index = enterPressed(allEntities, index, 2)      
+        elif key == 51:
+            index = enterPressed(allEntities, index, 3)      
         elif key == 111:
             index = dontKnowPressed(allEntities, index)
-        elif key == 225 or key == 32:
+        elif key == 225 or key == 32 or key == 48:
             index = notSamePressed(allEntities, index)
         elif key == 110:
             index = showNextNotSeen(allEntities)
@@ -56,7 +62,7 @@ def showNextDontKnow(allEntities):
     index = getNextDontKnowIndex(allEntities)
     img = cv2.imread(allEntities[index]["image"])
     img = showFileAdress(img, allEntities[index]["image"])
-    img = loadCircle(img, allEntities[index])
+    img = state.loadCircle(img, allEntities[index])
     cv2.imshow ('screen', img)
     return img
 
@@ -73,7 +79,7 @@ def showNextNotSeen(allEntities, index):
 def notSamePressed(allEntities, index):
     img = cv2.imread(allEntities[index]["image"])
     color = state.mapColor("n")
-    img = showCircle(img, color)
+    img = state.drawCircle(img, color)
     img = showFileAdress(img, allEntities[index]["image"])
     cv2.imshow ('screen', img)
     state.saveState("n",allEntities[index])
@@ -84,7 +90,7 @@ def notSamePressed(allEntities, index):
 def dontKnowPressed(allEntities, index):
     img = cv2.imread(allEntities[index]["image"])
     color = state.mapColor("dontKnow")
-    img = showCircle(img, color)
+    img = state.drawCircle(img, color)
     img = showFileAdress(img, allEntities[index]["image"])
     cv2.imshow ('screen', img)
     state.saveState("dontKnow",allEntities[index])
@@ -92,13 +98,13 @@ def dontKnowPressed(allEntities, index):
     index = showNextNotSeen(allEntities, index)
     return index
 
-def enterPressed(allEntities, index):
+def enterPressed(allEntities, index, equalityNumber):
     img = cv2.imread(allEntities[index]["image"])
     color = state.mapColor("y")
-    img = showCircle(img, color)
+    img = state.drawCircle(img, color, str(equalityNumber))
     img = showFileAdress(img, allEntities[index]["image"])
     cv2.imshow ('screen', img)
-    state.saveState("y",allEntities[index])
+    state.saveState("y",allEntities[index],equalityNumber)
     cv2.waitKey(300)
     index = showNextNotSeen(allEntities, index)
     return index
@@ -107,7 +113,7 @@ def leftPressed(allEntities, index):
     if(index>0):
         index = index-1
     img = cv2.imread(allEntities[index]["image"])
-    img = loadCircle(img, allEntities[index])
+    img = state.loadCircle(img, allEntities[index])
     img = showFileAdress(img, allEntities[index]["image"])
     cv2.imshow ('screen', img)
     return index
@@ -117,7 +123,7 @@ def rightPressed(allEntities, index):
         index = index+1
     img = cv2.imread(allEntities[index]["image"])
     img = showFileAdress(img, allEntities[index]["image"])
-    img = loadCircle(img, allEntities[index])
+    img = state.loadCircle(img, allEntities[index])
     cv2.imshow ('screen', img)
     return index
 
@@ -136,21 +142,11 @@ def getFileTextName(imageFileName):
     splitedImageFileName = imageFileName.split(".jpg")
     return splitedImageFileName[0]+".txt"
 
-def loadCircle(img, entity):
-    center_coordinates = (220, 150)
-    radius = 30
-    thickness = 200
-    if len(entity['text']) > 2:
-        color = state.getColor(entity["text"])
-        img = cv2.circle(img, center_coordinates, radius, color, thickness)
-    return img
 
 
-def showCircle(img, color):
-    center_coordinates = (220, 150)
-    radius = 30
-    thickness = 200
-    return cv2.circle(img, center_coordinates, radius, color, thickness)
+
+
+
 
 def showFileAdress(image, text):
     font                   = cv2.FONT_HERSHEY_SIMPLEX
@@ -158,7 +154,7 @@ def showFileAdress(image, text):
     fontScale              = 1
     fontColor              = (0,0,0)
     lineType               = 2
-    image = cv2.putText(image, text, 
+    image = cv2.putText(image, str(text), 
     bottomLeftCornerOfText, 
     font, 
     fontScale,

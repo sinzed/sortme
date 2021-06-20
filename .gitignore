@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 Result
 result.csv
+Result-bak/
