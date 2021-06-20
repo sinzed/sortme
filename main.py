@@ -1,6 +1,7 @@
 import cv2
 import state
 import time
+import numpy as np
 
 def main():
     allEntities = state.getAllEntites() 
@@ -52,12 +53,17 @@ def main():
             print(int(key))
 
 def exportResult(img):
-    img = state.writeTextToImage(img, "exporting", (400,200))
+    img = np.zeros((1200,1200,3), np.uint8)
+    img[:,0:1200//2] = (230,200,0)      # (B, G, R)
+    img[:,1200//2:1200] = (0,230,200)
+
+    img = state.writeTextToImage(img, "exporting", (200,200))
     cv2.imshow ('screen', img)
     state.exportToCsv()
-    img = state.writeTextToImage(img, "finished result.csv", (400,400))
+    img = state.writeTextToImage(img, "finished result.csv", (200,400))
     cv2.imshow ('screen', img)
-    exit()
+    cv2.waitKey(2000)
+    # exit()
 
 def showNextDontKnow(allEntities):
     index = getNextDontKnowIndex(allEntities)
